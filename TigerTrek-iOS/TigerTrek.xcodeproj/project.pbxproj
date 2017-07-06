@@ -1,0 +1,560 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0415D80D1F0AF66300F0C178 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0415D80C1F0AF66300F0C178 /* AppDelegate.swift */; };
+		0415D80F1F0AF66300F0C178 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0415D80E1F0AF66300F0C178 /* ViewController.swift */; };
+		0415D8121F0AF66300F0C178 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0415D8101F0AF66300F0C178 /* Main.storyboard */; };
+		0415D8141F0AF66300F0C178 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0415D8131F0AF66300F0C178 /* Assets.xcassets */; };
+		0415D8171F0AF66300F0C178 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0415D8151F0AF66300F0C178 /* LaunchScreen.storyboard */; };
+		0415D82A1F0AF77F00F0C178 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0415D8291F0AF77F00F0C178 /* GoogleService-Info.plist */; };
+		0438C2F91F0C1E4900C0D229 /* Eureka.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0438C2E91F0C1CEB00C0D229 /* Eureka.framework */; };
+		0438C2FA1F0C1E4900C0D229 /* Eureka.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0438C2E91F0C1CEB00C0D229 /* Eureka.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		0438C2FE1F0C38E400C0D229 /* RegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0438C2FD1F0C38E400C0D229 /* RegistrationViewController.swift */; };
+		0438C3021F0C497D00C0D229 /* RegistrationSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0438C3011F0C497D00C0D229 /* RegistrationSegue.swift */; };
+		0493290F1F0B2BDD00A58FE2 /* UnlockViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0493290E1F0B2BDD00A58FE2 /* UnlockViewController.swift */; };
+		04C2E0E31F0B0EB600F4BFAD /* Pods_TigerTrek.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04C2E0E21F0B0EB600F4BFAD /* Pods_TigerTrek.framework */; };
+		04C2E0E61F0B10FC00F4BFAD /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0415D8251F0AF74C00F0C178 /* AddressBook.framework */; };
+		04C2E0F21F0B11EB00F4BFAD /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04C2E0F11F0B11EB00F4BFAD /* SafariServices.framework */; };
+		04C2E0F31F0B11F100F4BFAD /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0415D8231F0AF74700F0C178 /* SystemConfiguration.framework */; };
+		04C2E0F91F0B129C00F4BFAD /* GoogleSignIn.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04C2E0F41F0B129C00F4BFAD /* GoogleSignIn.framework */; };
+		04C2E0FA1F0B129C00F4BFAD /* GoogleSignInDependencies.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04C2E0F51F0B129C00F4BFAD /* GoogleSignInDependencies.framework */; };
+		04C2E0FB1F0B129C00F4BFAD /* GoogleAppUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04C2E0F61F0B129C00F4BFAD /* GoogleAppUtilities.framework */; };
+		04C2E0FC1F0B129C00F4BFAD /* GoogleSignIn.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 04C2E0F71F0B129C00F4BFAD /* GoogleSignIn.bundle */; };
+		04C2E0FD1F0B129C00F4BFAD /* GoogleSymbolUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04C2E0F81F0B129C00F4BFAD /* GoogleSymbolUtilities.framework */; };
+		04C2E0FF1F0B1EC200F4BFAD /* ButtonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C2E0FE1F0B1EC200F4BFAD /* ButtonViewController.swift */; };
+		04C6C1AB1F0DD72600D04A7A /* CallViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C6C1AA1F0DD72600D04A7A /* CallViewController.swift */; };
+		04C6C1AD1F0DE3E100D04A7A /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C6C1AC1F0DE3E100D04A7A /* EditViewController.swift */; };
+		04C6C1AF1F0DE41D00D04A7A /* SecurityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C6C1AE1F0DE41D00D04A7A /* SecurityViewController.swift */; };
+		DC099A0F765AE47CBC8725EA /* Pods_TigerTrek.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9103448EDF50D39CE435613B /* Pods_TigerTrek.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		0438C2E81F0C1CEB00C0D229 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0438C2E31F0C1CEB00C0D229 /* Eureka.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 51729DEB1B9A4F5E004A00EB;
+			remoteInfo = Eureka;
+		};
+		0438C2EA1F0C1CEB00C0D229 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0438C2E31F0C1CEB00C0D229 /* Eureka.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 51729DF51B9A4F5E004A00EB;
+			remoteInfo = EurekaTests;
+		};
+		0438C2FB1F0C1E4900C0D229 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0438C2E31F0C1CEB00C0D229 /* Eureka.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 51729DEA1B9A4F5E004A00EB;
+			remoteInfo = Eureka;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		0438C2F81F0C1DA000C0D229 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				0438C2FA1F0C1E4900C0D229 /* Eureka.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		0415D8091F0AF66300F0C178 /* TigerTrek.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TigerTrek.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0415D80C1F0AF66300F0C178 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		0415D80E1F0AF66300F0C178 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		0415D8111F0AF66300F0C178 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		0415D8131F0AF66300F0C178 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		0415D8161F0AF66300F0C178 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		0415D8181F0AF66300F0C178 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0415D8231F0AF74700F0C178 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		0415D8251F0AF74C00F0C178 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
+		0415D8271F0AF75500F0C178 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		0415D8291F0AF77F00F0C178 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		0438C2E31F0C1CEB00C0D229 /* Eureka.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Eureka.xcodeproj; path = "../../../Downloads/Eureka-swift3.2/Eureka.xcodeproj"; sourceTree = "<group>"; };
+		0438C2FD1F0C38E400C0D229 /* RegistrationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegistrationViewController.swift; sourceTree = "<group>"; };
+		0438C3011F0C497D00C0D229 /* RegistrationSegue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegistrationSegue.swift; sourceTree = "<group>"; };
+		0490D2581F0B0659007D695A /* TigerTalk-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TigerTalk-Bridging-Header.h"; sourceTree = "<group>"; };
+		0493290E1F0B2BDD00A58FE2 /* UnlockViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnlockViewController.swift; sourceTree = "<group>"; wrapsLines = 1; };
+		04C2E0E21F0B0EB600F4BFAD /* Pods_TigerTrek.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Pods_TigerTrek.framework; path = "../../../Library/Developer/Xcode/DerivedData/TigerTrek-aztswbrqltpkbjgsrysehdypredl/Build/Products/Debug-iphonesimulator/Pods_TigerTrek.framework"; sourceTree = "<group>"; };
+		04C2E0F11F0B11EB00F4BFAD /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
+		04C2E0F41F0B129C00F4BFAD /* GoogleSignIn.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleSignIn.framework; sourceTree = "<group>"; };
+		04C2E0F51F0B129C00F4BFAD /* GoogleSignInDependencies.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleSignInDependencies.framework; sourceTree = "<group>"; };
+		04C2E0F61F0B129C00F4BFAD /* GoogleAppUtilities.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleAppUtilities.framework; sourceTree = "<group>"; };
+		04C2E0F71F0B129C00F4BFAD /* GoogleSignIn.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = GoogleSignIn.bundle; sourceTree = "<group>"; };
+		04C2E0F81F0B129C00F4BFAD /* GoogleSymbolUtilities.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleSymbolUtilities.framework; sourceTree = "<group>"; };
+		04C2E0FE1F0B1EC200F4BFAD /* ButtonViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonViewController.swift; sourceTree = "<group>"; };
+		04C6C1AA1F0DD72600D04A7A /* CallViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CallViewController.swift; sourceTree = "<group>"; };
+		04C6C1AC1F0DE3E100D04A7A /* EditViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
+		04C6C1AE1F0DE41D00D04A7A /* SecurityViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecurityViewController.swift; sourceTree = "<group>"; };
+		14D1DC1D9FC38B7611A4077E /* Pods-TigerTrek.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TigerTrek.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TigerTrek/Pods-TigerTrek.debug.xcconfig"; sourceTree = "<group>"; };
+		553E8260BD02CC0C3001CA48 /* Pods-TigerTrek.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TigerTrek.release.xcconfig"; path = "Pods/Target Support Files/Pods-TigerTrek/Pods-TigerTrek.release.xcconfig"; sourceTree = "<group>"; };
+		9103448EDF50D39CE435613B /* Pods_TigerTrek.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TigerTrek.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		0415D8061F0AF66200F0C178 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				04C2E0FA1F0B129C00F4BFAD /* GoogleSignInDependencies.framework in Frameworks */,
+				04C2E0F31F0B11F100F4BFAD /* SystemConfiguration.framework in Frameworks */,
+				04C2E0FD1F0B129C00F4BFAD /* GoogleSymbolUtilities.framework in Frameworks */,
+				04C2E0F21F0B11EB00F4BFAD /* SafariServices.framework in Frameworks */,
+				04C2E0E61F0B10FC00F4BFAD /* AddressBook.framework in Frameworks */,
+				04C2E0FB1F0B129C00F4BFAD /* GoogleAppUtilities.framework in Frameworks */,
+				04C2E0E31F0B0EB600F4BFAD /* Pods_TigerTrek.framework in Frameworks */,
+				04C2E0F91F0B129C00F4BFAD /* GoogleSignIn.framework in Frameworks */,
+				DC099A0F765AE47CBC8725EA /* Pods_TigerTrek.framework in Frameworks */,
+				0438C2F91F0C1E4900C0D229 /* Eureka.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0415D8001F0AF66200F0C178 = {
+			isa = PBXGroup;
+			children = (
+				0415D8291F0AF77F00F0C178 /* GoogleService-Info.plist */,
+				0490D2581F0B0659007D695A /* TigerTalk-Bridging-Header.h */,
+				0415D80B1F0AF66300F0C178 /* TigerTrek */,
+				0415D80A1F0AF66300F0C178 /* Products */,
+				0415D8221F0AF74700F0C178 /* Frameworks */,
+				EB0F83DF0C3FCFB2D088837C /* Pods */,
+			);
+			sourceTree = "<group>";
+		};
+		0415D80A1F0AF66300F0C178 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0415D8091F0AF66300F0C178 /* TigerTrek.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0415D80B1F0AF66300F0C178 /* TigerTrek */ = {
+			isa = PBXGroup;
+			children = (
+				0415D80C1F0AF66300F0C178 /* AppDelegate.swift */,
+				0415D80E1F0AF66300F0C178 /* ViewController.swift */,
+				0493290E1F0B2BDD00A58FE2 /* UnlockViewController.swift */,
+				04C2E0FE1F0B1EC200F4BFAD /* ButtonViewController.swift */,
+				0438C3011F0C497D00C0D229 /* RegistrationSegue.swift */,
+				0438C2FD1F0C38E400C0D229 /* RegistrationViewController.swift */,
+				04C6C1AA1F0DD72600D04A7A /* CallViewController.swift */,
+				04C6C1AC1F0DE3E100D04A7A /* EditViewController.swift */,
+				04C6C1AE1F0DE41D00D04A7A /* SecurityViewController.swift */,
+				0415D8101F0AF66300F0C178 /* Main.storyboard */,
+				0415D8131F0AF66300F0C178 /* Assets.xcassets */,
+				0415D8151F0AF66300F0C178 /* LaunchScreen.storyboard */,
+				0415D8181F0AF66300F0C178 /* Info.plist */,
+			);
+			path = TigerTrek;
+			sourceTree = "<group>";
+		};
+		0415D8221F0AF74700F0C178 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				04C2E0F41F0B129C00F4BFAD /* GoogleSignIn.framework */,
+				04C2E0F51F0B129C00F4BFAD /* GoogleSignInDependencies.framework */,
+				04C2E0F61F0B129C00F4BFAD /* GoogleAppUtilities.framework */,
+				04C2E0F71F0B129C00F4BFAD /* GoogleSignIn.bundle */,
+				04C2E0F81F0B129C00F4BFAD /* GoogleSymbolUtilities.framework */,
+				04C2E0F11F0B11EB00F4BFAD /* SafariServices.framework */,
+				04C2E0E21F0B0EB600F4BFAD /* Pods_TigerTrek.framework */,
+				0415D8271F0AF75500F0C178 /* StoreKit.framework */,
+				0415D8251F0AF74C00F0C178 /* AddressBook.framework */,
+				0415D8231F0AF74700F0C178 /* SystemConfiguration.framework */,
+				9103448EDF50D39CE435613B /* Pods_TigerTrek.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		0438C2E41F0C1CEB00C0D229 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0438C2E91F0C1CEB00C0D229 /* Eureka.framework */,
+				0438C2EB1F0C1CEB00C0D229 /* EurekaTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		EB0F83DF0C3FCFB2D088837C /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				0438C2E31F0C1CEB00C0D229 /* Eureka.xcodeproj */,
+				14D1DC1D9FC38B7611A4077E /* Pods-TigerTrek.debug.xcconfig */,
+				553E8260BD02CC0C3001CA48 /* Pods-TigerTrek.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		0415D8081F0AF66200F0C178 /* TigerTrek */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0415D81B1F0AF66300F0C178 /* Build configuration list for PBXNativeTarget "TigerTrek" */;
+			buildPhases = (
+				9ACED0776996052850748B19 /* [CP] Check Pods Manifest.lock */,
+				0415D8051F0AF66200F0C178 /* Sources */,
+				0415D8061F0AF66200F0C178 /* Frameworks */,
+				0415D8071F0AF66200F0C178 /* Resources */,
+				D3EF05CEFDFAB53B42961562 /* [CP] Embed Pods Frameworks */,
+				48F07FC88B257EC585516D80 /* [CP] Copy Pods Resources */,
+				0438C2F81F0C1DA000C0D229 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0438C2FC1F0C1E4900C0D229 /* PBXTargetDependency */,
+			);
+			name = TigerTrek;
+			productName = TigerTrek;
+			productReference = 0415D8091F0AF66300F0C178 /* TigerTrek.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0415D8011F0AF66200F0C178 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0830;
+				LastUpgradeCheck = 0830;
+				ORGANIZATIONNAME = "Juan Pablo Arenas";
+				TargetAttributes = {
+					0415D8081F0AF66200F0C178 = {
+						CreatedOnToolsVersion = 8.3.3;
+						DevelopmentTeam = 3STD9JQZ77;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 0415D8041F0AF66200F0C178 /* Build configuration list for PBXProject "TigerTrek" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 0415D8001F0AF66200F0C178;
+			productRefGroup = 0415D80A1F0AF66300F0C178 /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 0438C2E41F0C1CEB00C0D229 /* Products */;
+					ProjectRef = 0438C2E31F0C1CEB00C0D229 /* Eureka.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				0415D8081F0AF66200F0C178 /* TigerTrek */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		0438C2E91F0C1CEB00C0D229 /* Eureka.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Eureka.framework;
+			remoteRef = 0438C2E81F0C1CEB00C0D229 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0438C2EB1F0C1CEB00C0D229 /* EurekaTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = EurekaTests.xctest;
+			remoteRef = 0438C2EA1F0C1CEB00C0D229 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		0415D8071F0AF66200F0C178 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0415D8171F0AF66300F0C178 /* LaunchScreen.storyboard in Resources */,
+				0415D82A1F0AF77F00F0C178 /* GoogleService-Info.plist in Resources */,
+				0415D8141F0AF66300F0C178 /* Assets.xcassets in Resources */,
+				04C2E0FC1F0B129C00F4BFAD /* GoogleSignIn.bundle in Resources */,
+				0415D8121F0AF66300F0C178 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		48F07FC88B257EC585516D80 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TigerTrek/Pods-TigerTrek-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9ACED0776996052850748B19 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		D3EF05CEFDFAB53B42961562 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TigerTrek/Pods-TigerTrek-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		0415D8051F0AF66200F0C178 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0493290F1F0B2BDD00A58FE2 /* UnlockViewController.swift in Sources */,
+				0415D80F1F0AF66300F0C178 /* ViewController.swift in Sources */,
+				0438C3021F0C497D00C0D229 /* RegistrationSegue.swift in Sources */,
+				04C2E0FF1F0B1EC200F4BFAD /* ButtonViewController.swift in Sources */,
+				0438C2FE1F0C38E400C0D229 /* RegistrationViewController.swift in Sources */,
+				04C6C1AF1F0DE41D00D04A7A /* SecurityViewController.swift in Sources */,
+				04C6C1AB1F0DD72600D04A7A /* CallViewController.swift in Sources */,
+				0415D80D1F0AF66300F0C178 /* AppDelegate.swift in Sources */,
+				04C6C1AD1F0DE3E100D04A7A /* EditViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		0438C2FC1F0C1E4900C0D229 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Eureka;
+			targetProxy = 0438C2FB1F0C1E4900C0D229 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		0415D8101F0AF66300F0C178 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				0415D8111F0AF66300F0C178 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		0415D8151F0AF66300F0C178 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				0415D8161F0AF66300F0C178 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		0415D8191F0AF66300F0C178 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		0415D81A1F0AF66300F0C178 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		0415D81C1F0AF66300F0C178 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 14D1DC1D9FC38B7611A4077E /* Pods-TigerTrek.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 3STD9JQZ77;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				INFOPLIST_FILE = TigerTrek/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_BUNDLE_IDENTIFIER = com.jparenas.TigerTrek;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "TigerTalk-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		0415D81D1F0AF66300F0C178 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 553E8260BD02CC0C3001CA48 /* Pods-TigerTrek.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 3STD9JQZ77;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				INFOPLIST_FILE = TigerTrek/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_BUNDLE_IDENTIFIER = com.jparenas.TigerTrek;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "TigerTalk-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0415D8041F0AF66200F0C178 /* Build configuration list for PBXProject "TigerTrek" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0415D8191F0AF66300F0C178 /* Debug */,
+				0415D81A1F0AF66300F0C178 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0415D81B1F0AF66300F0C178 /* Build configuration list for PBXNativeTarget "TigerTrek" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0415D81C1F0AF66300F0C178 /* Debug */,
+				0415D81D1F0AF66300F0C178 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0415D8011F0AF66200F0C178 /* Project object */;
+}

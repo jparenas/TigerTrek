@@ -1,0 +1,12 @@
+{
+  "name": "TigerTrek-Server",
+  "version": "1.0.0",
+  "description": "TigerTrek Server",
+  "main": "index.js",
+  "author": "Juan Pablo Arenas",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3"
+  }
+}
