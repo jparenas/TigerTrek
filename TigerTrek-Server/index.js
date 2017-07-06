@@ -129,6 +129,7 @@ app.post('/request', function (req, res) {
   authenticate(data["id"], function (user) {
     db.serialize(function() {
       db.get("SELECT * FROM user WHERE email == \"" + data["email"] + "\"", function(err, row) {
+        console.log("Requested data from " + data["email"])
         res.json(row)
       })
     })
@@ -144,7 +145,17 @@ app.post('/update', function (req, res) {
   }
   authenticate(data["id"], function (user) {
     db.serialize(function() {
-      db.run("DELETE FROM user WHERE email == \"" + data["email"] + "\" LIMIT 1")
+      db.run("DELETE FROM user WHERE email == \"" + data["email"] + "\"")
+      names = ["height", "weight", "hair", "eye", "house", "room", "allergies", "medications", "contact"]
+      for (name in names) {
+        if (!data[names[name]]) {
+          if (names[name] == "weight") {
+            data[names[name]] = 0
+          } else {
+            data[names[name]] = ""
+          }
+        }
+      }
       db.run("INSERT INTO user VALUES (?,?,?,?,?,?,?,?,?,?,?)", data["email"], data["name"], data["height"], data["weight"], data["hair"], data["eye"], data["house"], data["room"], data["allergies"], data["medications"], data["contact"])
       console.log("Updated information of " + data["email"])
     })

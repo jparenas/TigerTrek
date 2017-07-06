@@ -22,7 +22,7 @@ class EditViewController: FormViewController {
         
         form +++ Section()
             <<< LabelRow() { row in
-                row.title = "In this form you can input data that can ease any identification purposes. If you do not want to fill a specific section, just skip it."
+                row.title = "In this form you can edit your data."
                 row.cell.textLabel?.numberOfLines = 0
             }
             +++ Section()
