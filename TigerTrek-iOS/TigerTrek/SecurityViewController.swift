@@ -9,9 +9,20 @@
 import UIKit
 
 class SecurityViewController: UITableViewController {
+    
+    //MARK: Properties
+    
+    var queue = [QueueItem]()
+    weak var timer: Timer?
 
     override func viewDidLoad() {
         super.viewDidLoad()
+                
+        Timer.scheduledTimer(timeInterval: 7.0, target: self, selector: #selector(SecurityViewController.updateQueue), userInfo: nil, repeats: true)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(updateNotification(notification:)), name: Notification.Name("update notification"), object: nil)
+        
+        updateQueue()
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -24,17 +35,28 @@ class SecurityViewController: UITableViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    // MARK: Update functions
+    
+    func updateQueue() {
+        NotificationCenter.default.post(name: Notification.Name("update queue"), object: nil, userInfo: nil)
+    }
+    
+    func updateNotification(notification: Notification) {
+        let data = notification.userInfo!["data"] as? [[String:String]]
+        for item in data! {
+            print(item)
+        }
+    }
 
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 0
+        return queue.count
     }
 
     /*

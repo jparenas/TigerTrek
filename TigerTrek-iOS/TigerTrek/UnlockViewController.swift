@@ -17,6 +17,8 @@ class UnlockViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
+        NotificationCenter.default.addObserver(self, selector: #selector(performTransition(notification:)), name: Notification.Name("security response"), object: nil)
+        
         updateUI()
     }
     
@@ -92,9 +94,19 @@ class UnlockViewController: UIViewController {
                 }
                 
                 // Good news! Everything went fine
-                self.performSegue(withIdentifier: "segueToButtons", sender: nil)
+                NotificationCenter.default.post(name: Notification.Name("security access"), object: nil, userInfo: nil)
             }
         })
+    }
+    
+    func performTransition(notification: Notification) {
+        switch(notification.userInfo!["security_access"]! as! Bool) {
+        case false:
+            self.performSegue(withIdentifier: "segueToButtons", sender: nil)
+        case true:
+            self.performSegue(withIdentifier: "segueToSecurity", sender: nil)
+        }
+        
     }
     
 }

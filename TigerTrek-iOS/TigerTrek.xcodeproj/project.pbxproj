@@ -18,6 +18,8 @@
 		0438C2FE1F0C38E400C0D229 /* RegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0438C2FD1F0C38E400C0D229 /* RegistrationViewController.swift */; };
 		0438C3021F0C497D00C0D229 /* RegistrationSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0438C3011F0C497D00C0D229 /* RegistrationSegue.swift */; };
 		0493290F1F0B2BDD00A58FE2 /* UnlockViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0493290E1F0B2BDD00A58FE2 /* UnlockViewController.swift */; };
+		049D5F551F18812C007AEAC5 /* QueueTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049D5F541F18812C007AEAC5 /* QueueTableViewCell.swift */; };
+		049D5F581F18847F007AEAC5 /* QueueItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049D5F571F18847F007AEAC5 /* QueueItem.swift */; };
 		04C2E0E31F0B0EB600F4BFAD /* Pods_TigerTrek.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04C2E0E21F0B0EB600F4BFAD /* Pods_TigerTrek.framework */; };
 		04C2E0E61F0B10FC00F4BFAD /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0415D8251F0AF74C00F0C178 /* AddressBook.framework */; };
 		04C2E0F21F0B11EB00F4BFAD /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04C2E0F11F0B11EB00F4BFAD /* SafariServices.framework */; };
@@ -89,6 +91,8 @@
 		0438C3011F0C497D00C0D229 /* RegistrationSegue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegistrationSegue.swift; sourceTree = "<group>"; };
 		0490D2581F0B0659007D695A /* TigerTalk-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TigerTalk-Bridging-Header.h"; sourceTree = "<group>"; };
 		0493290E1F0B2BDD00A58FE2 /* UnlockViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnlockViewController.swift; sourceTree = "<group>"; wrapsLines = 1; };
+		049D5F541F18812C007AEAC5 /* QueueTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueueTableViewCell.swift; sourceTree = "<group>"; };
+		049D5F571F18847F007AEAC5 /* QueueItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueueItem.swift; sourceTree = "<group>"; };
 		04C2E0E21F0B0EB600F4BFAD /* Pods_TigerTrek.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Pods_TigerTrek.framework; path = "../../../Library/Developer/Xcode/DerivedData/TigerTrek-aztswbrqltpkbjgsrysehdypredl/Build/Products/Debug-iphonesimulator/Pods_TigerTrek.framework"; sourceTree = "<group>"; };
 		04C2E0F11F0B11EB00F4BFAD /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
 		04C2E0F41F0B129C00F4BFAD /* GoogleSignIn.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleSignIn.framework; sourceTree = "<group>"; };
@@ -158,6 +162,8 @@
 				04C6C1AA1F0DD72600D04A7A /* CallViewController.swift */,
 				04C6C1AC1F0DE3E100D04A7A /* EditViewController.swift */,
 				04C6C1AE1F0DE41D00D04A7A /* SecurityViewController.swift */,
+				049D5F571F18847F007AEAC5 /* QueueItem.swift */,
+				049D5F541F18812C007AEAC5 /* QueueTableViewCell.swift */,
 				0415D8101F0AF66300F0C178 /* Main.storyboard */,
 				0415D8131F0AF66300F0C178 /* Assets.xcassets */,
 				0415D8151F0AF66300F0C178 /* LaunchScreen.storyboard */,
@@ -357,8 +363,10 @@
 				0493290F1F0B2BDD00A58FE2 /* UnlockViewController.swift in Sources */,
 				0415D80F1F0AF66300F0C178 /* ViewController.swift in Sources */,
 				0438C3021F0C497D00C0D229 /* RegistrationSegue.swift in Sources */,
+				049D5F581F18847F007AEAC5 /* QueueItem.swift in Sources */,
 				04C2E0FF1F0B1EC200F4BFAD /* ButtonViewController.swift in Sources */,
 				0438C2FE1F0C38E400C0D229 /* RegistrationViewController.swift in Sources */,
+				049D5F551F18812C007AEAC5 /* QueueTableViewCell.swift in Sources */,
 				04C6C1AF1F0DE41D00D04A7A /* SecurityViewController.swift in Sources */,
 				04C6C1AB1F0DD72600D04A7A /* CallViewController.swift in Sources */,
 				0415D80D1F0AF66300F0C178 /* AppDelegate.swift in Sources */,

@@ -134,8 +134,6 @@ class EditViewController: FormViewController {
     }
     
     func updateInformation(notification: Notification) {
-        print("information updated")
-        print(notification.userInfo as! [String:Any])
         
         //I have no idea how this is working. As long as it works...
         let json = notification.userInfo as! [String:Any]

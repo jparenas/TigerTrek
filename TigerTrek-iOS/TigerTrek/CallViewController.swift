@@ -28,6 +28,7 @@ class CallViewController: UIViewController {
         
         // add the actions (buttons)
         alert.addAction(UIAlertAction(title: "Continue", style: UIAlertActionStyle.destructive, handler: { action in
+            NotificationCenter.default.post(name: Notification.Name("cancel emergency"), object: nil, userInfo: ["email":GIDSignIn.sharedInstance().currentUser.profile.email, "id": GIDSignIn.sharedInstance().currentUser.authentication.idToken])
             self.dismiss(animated: true, completion: nil)
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default, handler: nil))

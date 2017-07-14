@@ -10,9 +10,11 @@ import UIKit
 //import GoogleSignIn
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, URLSessionDelegate {
 
     var window: UIWindow?
+    
+    var isSecurity = false
     
     let server = "http://localhost:3000"
 
@@ -24,6 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         // "https://www.googleapis.com/auth/plus.login" is also one of the scopes... but it's not used.
         GIDSignIn.sharedInstance().delegate = self
         
+        //Function
         NotificationCenter.default.addObserver(self, selector: #selector(sendRegistration(notification:)), name: Notification.Name("send registration"), object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(sendEmergency(notification:)), name: Notification.Name("emergency"), object: nil)
@@ -31,6 +34,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(requestInformation(notification:)), name: Notification.Name("request information"), object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(updateInformation(notification:)), name: Notification.Name("send update"), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(cancelEmergency(notification:)), name: Notification.Name("cancel emergency"), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(isSecurity(notification:)), name: Notification.Name("security access"), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(updateQueue(notification:)), name: Notification.Name("update queue"), object: nil)
         
         return true
     }
@@ -65,6 +74,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
     
+    //This function will connect to the server using the specified address and payload and return the JSON data.
+    func requestFromServer(request: String, payload: [String:Any],completionHandler: @escaping ([String:Any]) -> Void) {
+        let jsonData = try? JSONSerialization.data(withJSONObject: payload)
+        
+        // create post request
+        var request = URLRequest(url: URL(string: "\(server)/\(request)")!)
+        request.httpMethod = "POST"
+        
+        // insert json data to the request
+        request.httpBody = jsonData
+        
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let data = data, error == nil else {
+                print(error?.localizedDescription ?? "No data")
+                return
+            }
+            if let httpStatus = response as? HTTPURLResponse, httpStatus.statusCode == 401 {
+                print("User is using bad credentials")
+                print("response = \(String(describing: response))")
+            }
+            let responseJSON = try? JSONSerialization.jsonObject(with: data, options: [])
+            if let responseJSON = responseJSON as? [String: Any] {
+                completionHandler(responseJSON)
+            }
+        }
+        
+        task.resume()
+    }
+    
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
         if (error == nil) {
             // Perform any operations on signed in user here.
@@ -79,44 +117,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
                 //print(fullName)
                 
                 //Send request to server to verify + update info
-                var request = URLRequest(url: URL(string: "\(server)/login")!)
-                //var request = URLRequest(url: URL(string: "http://192.168.0.13:3000/login")!)
-                request.httpMethod = "POST"
-                let postString = "token=\(idToken)"
-                request.httpBody = postString.data(using: .utf8)
-                let task = URLSession.shared.dataTask(with: request) { data, response, error in
-                    guard let data = data, error == nil else {                                                 // check for fundamental networking error
-                        switch ((error as! NSError).code) {
-                        case -1004:
-                            print("Server is not active")
-                        default:
-                            print("error=\(String(describing: error))")
+                requestFromServer(request: "login", payload: ["token":idToken]) { response in
+                    switch (response["userRegistered"] as! Bool) {
+                    case false:
+                        DispatchQueue.main.async() {
+                            // Do stuff to UI. DispatchQueue is required for this kind of changes.
+                            NotificationCenter.default.post(name: Notification.Name("login"), object: nil, userInfo: ["data":"form"])
                         }
-                        return
-                    }
-                    if let httpStatus = response as? HTTPURLResponse, httpStatus.statusCode == 401 {                         print("User is using bad credentials")
-                        print("response = \(String(describing: response))")
-                    }
-                    
-                    do {
-                        let parsedData = try JSONSerialization.jsonObject(with: data) as! [String:Any]
-                        switch (parsedData["userRegistered"] as! Bool) {
-                        case false:
-                            DispatchQueue.main.async() {
-                                // Do stuff to UI. DispatchQueue is required for this kind of changes.
-                                NotificationCenter.default.post(name: Notification.Name("login"), object: nil, userInfo: ["data":"form"])
+                    case true:
+                        DispatchQueue.main.async() {
+                            // Do stuff to UI. DispatchQueue is required for this kind of changes.
+                            if response["securityAccess"] as! Bool == true {
+                                self.isSecurity = true
+                            } else {
+                                self.isSecurity = false
                             }
-                        case true:
-                            DispatchQueue.main.async() {
-                                // Do stuff to UI. DispatchQueue is required for this kind of changes.
-                                NotificationCenter.default.post(name: Notification.Name("login"), object: nil, userInfo: ["data":"unlock"])
-                            }
+                            NotificationCenter.default.post(name: Notification.Name("login"), object: nil, userInfo:
+                                ["data":"unlock"])
                         }
-                    } catch let error as NSError {
-                        print("Error deserializing JSON: \(error)")
                     }
                 }
-                task.resume()
             } else {
                 GIDSignIn.sharedInstance().disconnect()
                 NotificationCenter.default.post(name: Notification.Name("login"), object: nil, userInfo: ["data":"wrong domain"])
@@ -133,101 +153,61 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
     }
     
     func sendRegistration(notification: Notification) {
-        let jsonData = try? JSONSerialization.data(withJSONObject: notification.userInfo ?? ["name":GIDSignIn.sharedInstance().currentUser.profile.name, "email":GIDSignIn.sharedInstance().currentUser.profile.email])
-
-        // create post request
-        var request = URLRequest(url: URL(string: "\(server)/register")!)
-        request.httpMethod = "POST"
-        
-        // insert json data to the request
-        request.httpBody = jsonData
-        
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            guard let data = data, error == nil else {
-                print(error?.localizedDescription ?? "No data")
-                return
-            }
-            let responseJSON = try? JSONSerialization.jsonObject(with: data, options: [])
-            if let responseJSON = responseJSON as? [String: Any] {
-                switch (responseJSON["userRegistered"] as! Bool) {
-                case false:
-                    //...this shouldn't happen. At all.
-                    break
-                case true:
-                    DispatchQueue.main.async() {
-                        // Do stuff to UI. DispatchQueue is required for this kind of changes.
-                        NotificationCenter.default.post(name: Notification.Name("complete registration"), object: nil, userInfo: ["data":"unlock"])
-                    }
+        requestFromServer(request: "register", payload: notification.userInfo as! [String:Any]) { response in
+            switch (response["userRegistered"] as! Bool) {
+            case false:
+                //...this shouldn't happen. At all.
+                break
+            case true:
+                DispatchQueue.main.async() {
+                    // Do stuff to UI. DispatchQueue is required for this kind of changes.
+                    NotificationCenter.default.post(name: Notification.Name("complete registration"), object: nil, userInfo: ["data":"unlock"])
                 }
             }
         }
-        
-        task.resume()
     }
     
     func sendEmergency(notification: Notification) {
-        let jsonData = try? JSONSerialization.data(withJSONObject: notification.userInfo ?? ["id":GIDSignIn.sharedInstance().currentUser.authentication.idToken])
-        
-        // create post request
-        var request = URLRequest(url: URL(string: "\(server)/emergency")!)
-        request.httpMethod = "POST"
-        
-        // insert json data to the request
-        request.httpBody = jsonData
-        
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            guard let _ = data, error == nil else {
-                print(error?.localizedDescription ?? "No data")
-                return
-            }
+        requestFromServer(request: "emergency", payload: notification.userInfo as! [String:Any]) { response in
+            return
         }
-        task.resume()
     }
     
     func requestInformation(notification: Notification) {
-        let jsonData = try? JSONSerialization.data(withJSONObject: notification.userInfo ?? ["id":GIDSignIn.sharedInstance().currentUser.authentication.idToken, "email":GIDSignIn.sharedInstance().currentUser.profile.email])
-        
-        // create post request
-        var request = URLRequest(url: URL(string: "\(server)/request")!)
-        request.httpMethod = "POST"
-        
-        // insert json data to the request
-        request.httpBody = jsonData
-        
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            guard let data = data, error == nil else {
-                print(error?.localizedDescription ?? "No data")
-                return
-            }
-            let responseJSON = try? JSONSerialization.jsonObject(with: data, options: [])
-            if let responseJSON = responseJSON as? [String: Any] {
-                DispatchQueue.main.async() {
-                    // Do stuff to UI. DispatchQueue is required for this kind of changes.
-                    NotificationCenter.default.post(name: Notification.Name("update information"), object: nil, userInfo: responseJSON)
-                }
+        requestFromServer(request: "request", payload: notification.userInfo as! [String:Any]) { response in
+            DispatchQueue.main.async() {
+                // Do stuff to UI. DispatchQueue is required for this kind of changes.
+                NotificationCenter.default.post(name: Notification.Name("update information"), object: nil, userInfo: response)
             }
         }
-        task.resume()
     }
     
     func updateInformation(notification: Notification) {
-        let jsonData = try? JSONSerialization.data(withJSONObject: notification.userInfo ?? ["name":GIDSignIn.sharedInstance().currentUser.profile.name, "email":GIDSignIn.sharedInstance().currentUser.profile.email])
-        
-        // create post request
-        var request = URLRequest(url: URL(string: "\(server)/update")!)
-        request.httpMethod = "POST"
-        
-        // insert json data to the request
-        request.httpBody = jsonData
-        
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            guard let data = data, error == nil else {
-                print(error?.localizedDescription ?? "No data")
-                return
+        requestFromServer(request: "update", payload: notification.userInfo as! [String:Any]) { response in
+            return
+        }
+    }
+    
+    func cancelEmergency(notification: Notification) {
+        requestFromServer(request: "cancel", payload: notification.userInfo as! [String:Any]) { response in
+            return
+        }
+    }
+    
+    func isSecurity(notification: Notification) {
+        DispatchQueue.main.async() {
+            // Do stuff to UI. DispatchQueue is required for this kind of changes.
+            NotificationCenter.default.post(name: Notification.Name("security response"), object: nil, userInfo: ["security_access":self.isSecurity])
+        }
+    }
+    
+    func updateQueue(notification: Notification) {
+        requestFromServer(request: "get-queue", payload: ["id":GIDSignIn.sharedInstance().currentUser.authentication.idToken]) { response in
+            DispatchQueue.main.async() {
+                // Do stuff to UI. DispatchQueue is required for this kind of changes.
+                NotificationCenter.default.post(name: Notification.Name("update notification"), object: nil, userInfo: response)
             }
         }
-        
-        task.resume()
     }
 }
 
