@@ -13,6 +13,7 @@
 		0415D8141F0AF66300F0C178 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0415D8131F0AF66300F0C178 /* Assets.xcassets */; };
 		0415D8171F0AF66300F0C178 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0415D8151F0AF66300F0C178 /* LaunchScreen.storyboard */; };
 		0415D82A1F0AF77F00F0C178 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0415D8291F0AF77F00F0C178 /* GoogleService-Info.plist */; };
+		04166FCC1F193DCC00F6E609 /* InformationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04166FCB1F193DCC00F6E609 /* InformationViewController.swift */; };
 		0438C2F91F0C1E4900C0D229 /* Eureka.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0438C2E91F0C1CEB00C0D229 /* Eureka.framework */; };
 		0438C2FA1F0C1E4900C0D229 /* Eureka.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0438C2E91F0C1CEB00C0D229 /* Eureka.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0438C2FE1F0C38E400C0D229 /* RegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0438C2FD1F0C38E400C0D229 /* RegistrationViewController.swift */; };
@@ -86,6 +87,7 @@
 		0415D8251F0AF74C00F0C178 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		0415D8271F0AF75500F0C178 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		0415D8291F0AF77F00F0C178 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		04166FCB1F193DCC00F6E609 /* InformationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InformationViewController.swift; sourceTree = "<group>"; };
 		0438C2E31F0C1CEB00C0D229 /* Eureka.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Eureka.xcodeproj; path = "../../../Downloads/Eureka-swift3.2/Eureka.xcodeproj"; sourceTree = "<group>"; };
 		0438C2FD1F0C38E400C0D229 /* RegistrationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegistrationViewController.swift; sourceTree = "<group>"; };
 		0438C3011F0C497D00C0D229 /* RegistrationSegue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegistrationSegue.swift; sourceTree = "<group>"; };
@@ -162,6 +164,7 @@
 				04C6C1AA1F0DD72600D04A7A /* CallViewController.swift */,
 				04C6C1AC1F0DE3E100D04A7A /* EditViewController.swift */,
 				04C6C1AE1F0DE41D00D04A7A /* SecurityViewController.swift */,
+				04166FCB1F193DCC00F6E609 /* InformationViewController.swift */,
 				049D5F571F18847F007AEAC5 /* QueueItem.swift */,
 				049D5F541F18812C007AEAC5 /* QueueTableViewCell.swift */,
 				0415D8101F0AF66300F0C178 /* Main.storyboard */,
@@ -371,6 +374,7 @@
 				04C6C1AB1F0DD72600D04A7A /* CallViewController.swift in Sources */,
 				0415D80D1F0AF66300F0C178 /* AppDelegate.swift in Sources */,
 				04C6C1AD1F0DE3E100D04A7A /* EditViewController.swift in Sources */,
+				04166FCC1F193DCC00F6E609 /* InformationViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

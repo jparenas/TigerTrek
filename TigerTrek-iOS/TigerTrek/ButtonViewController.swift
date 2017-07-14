@@ -46,8 +46,7 @@ class ButtonViewController: UIViewController, CLLocationManagerDelegate {
     
     //this method is called by the framework on         locationManager.requestLocation();
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        NotificationCenter.default.post(name: Notification.Name("emergency"), object: nil, userInfo: ["latitude":manager.location!.coordinate.latitude, "longitude": manager.location!.coordinate.longitude, "id": GIDSignIn.sharedInstance().currentUser.authentication.idToken])
-        //store the user location here to firebase or somewhere
+        NotificationCenter.default.post(name: Notification.Name("emergency"), object: nil, userInfo: ["latitude":manager.location!.coordinate.latitude, "longitude": manager.location!.coordinate.longitude, "id": GIDSignIn.sharedInstance().currentUser.authentication.idToken, "name":GIDSignIn.sharedInstance().currentUser.profile.name, "email":GIDSignIn.sharedInstance().currentUser.profile.email])
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {

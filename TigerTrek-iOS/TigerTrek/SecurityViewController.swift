@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MapKit
 
 class SecurityViewController: UITableViewController {
     
@@ -43,10 +44,16 @@ class SecurityViewController: UITableViewController {
     }
     
     func updateNotification(notification: Notification) {
-        let data = notification.userInfo!["data"] as? [[String:String]]
+        let data = notification.userInfo?["data"] as? [[String:String]]
+        queue.removeAll()
         for item in data! {
-            print(item)
+            guard let queueItem = QueueItem(name: item["name"]!, email: item["email"]!, latitude:Double(item["latitude"]!)!,   longitude: Double(item["longitude"]!)!) else {
+                fatalError("Unable to instantiate a queue item")
+            }
+            queue.append(queueItem)
         }
+        
+        self.tableView.reloadData()
     }
 
     // MARK: - Table view data source
@@ -59,15 +66,50 @@ class SecurityViewController: UITableViewController {
         return queue.count
     }
 
-    /*
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
+        let cellIdentifier = "QueueTableViewCell"
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? QueueTableViewCell  else {
+            fatalError("The dequeued cell is not an instance of QueueTableViewCell.")
+        }
+        
+        let queueItem = queue[indexPath.row]
+        
+        cell.nameLabel.text = queueItem.name
+        cell.emailLabel.text = queueItem.email
+        cell.showLocation(location: CLLocation(latitude: queueItem.latitude, longitude: queueItem.longitude))
 
         // Configure the cell...
 
         return cell
     }
-    */
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: IndexPath) {
+        
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+        performSegue(withIdentifier: "segueToInformation", sender: self)
+        
+        print("BUTTON PRESSED")
+        
+        print(self.tableView.indexPathForSelectedRow?.row as Any)
+        
+        let row = indexPath.row
+        print("Row: \(row)")
+        
+        print(queue[row].name)
+        
+    }
+    
+    // MARK: - Navigation
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "segueToInformation" {
+            // Setup new view controller
+            
+            let vc = segue.destination as! InformationViewController
+            vc.information["email"] = queue[(self.tableView.indexPathForSelectedRow?.row)!].email
+        }
+    }
 
     /*
     // Override to support conditional editing of the table view.
@@ -103,15 +145,4 @@ class SecurityViewController: UITableViewController {
         return true
     }
     */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

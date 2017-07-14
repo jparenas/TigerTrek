@@ -41,6 +41,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, URLSes
         
         NotificationCenter.default.addObserver(self, selector: #selector(updateQueue(notification:)), name: Notification.Name("update queue"), object: nil)
         
+        NotificationCenter.default.addObserver(self, selector: #selector(requestEmergencyInformation(notification:)), name: Notification.Name("request emergency information"), object: nil)
+        
         return true
     }
     
@@ -206,6 +208,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, URLSes
             DispatchQueue.main.async() {
                 // Do stuff to UI. DispatchQueue is required for this kind of changes.
                 NotificationCenter.default.post(name: Notification.Name("update notification"), object: nil, userInfo: response)
+            }
+        }
+    }
+    
+    func requestEmergencyInformation(notification: Notification) {
+        requestFromServer(request: "request-emergency", payload: notification.userInfo as! [String:Any]) { response in
+            DispatchQueue.main.async() {
+                // Do stuff to UI. DispatchQueue is required for this kind of changes.
+                NotificationCenter.default.post(name: Notification.Name("emergency information response"), object: nil, userInfo: response)
             }
         }
     }

@@ -66,6 +66,7 @@ class UnlockViewController: UIViewController {
                         let appDelegate = UIApplication.shared.delegate as! AppDelegate
                         //show window
                         appDelegate.window?.rootViewController = view
+                        return
                         // Fallback button was pressed and an extra login step should be implemented for iOS 8 users.
                     // By the other hand, iOS 9+ users will use the pasccode verification implemented by the own system.
                     case LAError.userFallback:

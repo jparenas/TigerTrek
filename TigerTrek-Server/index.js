@@ -7,9 +7,21 @@ const sqlite3 = require('sqlite3').verbose();
 
 var sqliteFile = "tigerdatabase.sqlite3";
 
+var authenticationCache = []
+
 var db = new sqlite3.Database(sqliteFile); 
 
 function authenticate(token, callback) {
+  for (cache in authenticationCache) {
+    if (token == authenticationCache[cache]["id"]) {
+      log("Using cached data for " + authenticationCache[cache]["email"])
+      callback({
+        authenticated: true,
+        data: authenticationCache[cache]
+      })
+      return
+    }
+  }
   https.get('https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=' + token, (res) => {
       const { statusCode } = res;
       const contentType = res.headers['content-type'];
@@ -38,10 +50,14 @@ function authenticate(token, callback) {
       res.on('end', () => {
         try {
           const parsedData = JSON.parse(rawData);
-          callback({
-            authenticated: true,
-            data: parsedData
-          })
+          if (parsedData["hd"] == "depauw.edu") {
+            parsedData["id"] = token
+            authenticationCache.push(parsedData)
+            callback({
+              authenticated: true,
+              data: parsedData
+            })
+          }
         } catch (e) {
           console.error(e.message);
         }
@@ -52,7 +68,8 @@ function authenticate(token, callback) {
 }
 
 function log(message) {
-  console.log("[" + Date.getDate() + "/" + Date.getMonth + " " + Date.getHours() + ":" + Date.getMinutes() + ":" + Date.getSeconds() + "] " + message)
+  var now = new Date()
+  console.log("[" + now.getDate() + "/" + now.getMonth()+1 + " " + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds() + "] " + message)
 }
 
 app.use(bodyParser.json());
@@ -75,7 +92,7 @@ app.post('/login', function (req, res) {
             res.json({"userRegistered": false});
           } else if (row.email == user.data["email"] || securityRow.email == user.data["email"]){
             if (securityRow == undefined) {
-              security = false
+              security = true
             } else {
               security = true
             }
@@ -132,7 +149,7 @@ app.post('/emergency', function (req, res) {
       if (data["latitude"] && data ["longitude"]) {
         db.get("SELECT * FROM queue WHERE email == ?", data["email"], function(err, row) {
           if (row == undefined) {
-            db.run("INSERT INTO queue VALUES (?,?,?,?,?)", user.data["email"], user.data["name"], data["latitude"], data["longitude"], Date.now()) 
+            db.run("INSERT INTO queue VALUES (?,?,?,?,?)", data["email"], data["name"], data["latitude"], data["longitude"], Date.now()) 
             log("Emergency reported at lat:" + data["latitude"] + " lon:" + data["longitude"] + " by " + user.data["email"])
           } else {
             log("Attempted to report emmergency by " + user.data["email"] + " but an emergency has already been logged")
@@ -231,18 +248,53 @@ app.post('/get-queue', function (req, res) {
   })
 })
 
+app.post('/request-emergency', function (req, res) {
+  try {
+    data = JSON.parse(Object.keys(req.body))
+  } catch(err) {
+    data = req.body
+    log(err)
+  }
+  authenticate(data["id"], function (user) {
+    if (user.authenticated) {
+      db.serialize(function() {
+        db.get("SELECT * FROM user WHERE email == ?", data["email"], function(err, row) {
+          db.get("SELECT * FROM queue WHERE email == ?", data["email"], function(queueErr, queueRow) {
+            log("Requested data from " + data["email"] + " by " + user.data["email"])
+            row.latitude = queueRow.latitude
+            row.longitude = queueRow.longitude
+            console.log(row)
+            res.json(row)
+          })
+        })
+      })
+    }
+  })
+})
+
 app.get('/', function (req, res) {
     res.send("Hallo, you shouldn't be here");
 })
 
 function cleanQueue() {
-  log("Cleaning Queue!")
+  var count = 0
   /*db.each("SELECT * FROM queue", function(err, row) {
     if (Date.now() - row.time >= 3600000) {
       db.run("DELETE FROM queue WHERE email = ?", row.email)
-      log("Deleted emergency of " + row.email)
+      count++
     }
   })*/
+  log("Cleaned " + count + " elements on the queue!")
+  count = 0
+  date = new Date()
+  for (cache in authenticationCache) {
+    cacheDate = new Date(authenticationCache[cache]["exp"]*1000)
+    if (date.getTime() >= cacheDate.getTime()) {
+      authenticationCache.splice(cache)
+      count++
+    }
+  }
+  log("Cleaned cache, removing " + count + " entries")
 }
 
 /*
@@ -253,4 +305,4 @@ https.createServer({
 
 app.listen(3000)
 
-setInterval(cleanQueue, 60000)
+setInterval(cleanQueue, 300000)
