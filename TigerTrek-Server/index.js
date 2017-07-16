@@ -5,11 +5,34 @@ const bodyParser = require('body-parser')
 const https = require('https')
 const sqlite3 = require('sqlite3').verbose(); 
 
+//The database file to use.
+
 var sqliteFile = "tigerdatabase.sqlite3";
 
 var authenticationCache = []
 
 var db = new sqlite3.Database(sqliteFile); 
+
+app.use(bodyParser.json());
+//support parsing of application/x-www-form-urlencoded post data
+app.use(bodyParser.urlencoded({ extended: true }));
+
+/*
+
+This function authenticates a token id using Google's backend in an async manner. If a user has already been authenticated and the token is still valid, it will use a cache in order to reduce the hits to Google's server. 
+
+Arguments:
+
+token: String that contains the token id as reported by Google's OAuth token. 
+callback: A function that is called when this function returns. It needs to have a single argument, which is the return dictionary.
+
+Returns:
+{
+  ["authenticated"], //A boolean that is true if the user is authenticated
+  ["data"]           //The data returned by Google's server. It contains the email, the name, and a few parameters such as expiry time. The token id is added for convenience.
+}
+
+*/
 
 function authenticate(token, callback) {
   for (cache in authenticationCache) {
@@ -67,14 +90,69 @@ function authenticate(token, callback) {
     });
 }
 
+/*
+
+This function logs a message to the console, adding a timestamp to the message.
+
+Arguments:
+
+message: String that contains the message to log.
+
+*/
+
 function log(message) {
   var now = new Date()
   console.log("[" + now.getDate() + "/" + now.getMonth()+1 + " " + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds() + "] " + message)
 }
 
-app.use(bodyParser.json());
-//support parsing of application/x-www-form-urlencoded post data
-app.use(bodyParser.urlencoded({ extended: true }));
+//BEGINNING OF SERVER PAGES
+
+/*
+
+It is important to mention that all the pages have the following code at the beginning:
+
+try {
+  data = JSON.parse(Object.keys(req.body))
+} catch(err) {
+  data = req.body
+}
+
+This code acts as a work-around for the iOS version, as it embedded the JSON as a key in the body, and not as a dictionary. It should also work if the JSON data is properly embedded in the body.
+
+
+The server will ALWAYS return a 401 http status if the token id is invalid. The app should act accordingly if the status is 401. Maybe a blacklist should be implemented if an IP accumulates too many 401s?
+
+
+The way to know if a user is part of the security team is by using its email. It is necessary to add its email to the security table in the database, else it won't be recognized as a security user and instead it will be registered as a regular user.
+
+
+All the documentation for the server requests will assume that the arguments are the keys and the values in JSON format that needs to be sent from the client to the server, and the response will be a JSON table sent from the server to the client. 
+
+---------IMPORTANT---------
+All the requests need to include the token id, as a security measure. It always needs to be added to the JSON request with the following key: ["token"]
+
+*/
+
+/*
+
+This page checks if the user has already registered, and whether it is security or it isn't. If the user is part of security, it won't be asked to register. In order to avoid spoofing, it uses the email associated to the token id. 
+
+Arguments:
+
+{
+  ["token"] //The user's token id as reported by Google.
+}
+
+Returns:
+
+{
+  ["userRegistered"], //A boolean that is true if the user is registered, false otherwise.
+  ["securityAccess"]  //A boolean that is true if the user has security clearance, false otherwise.
+}
+
+The app should redirect the user to the register form if it isn't registered. If the user has security clearance, ["userRegistered"] will always be true.
+
+*/
 
 app.post('/login', function (req, res) {
   try {
@@ -92,7 +170,7 @@ app.post('/login', function (req, res) {
             res.json({"userRegistered": false});
           } else if (row.email == user.data["email"] || securityRow.email == user.data["email"]){
             if (securityRow == undefined) {
-              security = true
+              security = false
             } else {
               security = true
             }
@@ -107,6 +185,34 @@ app.post('/login', function (req, res) {
   })
 })
 
+/*
+
+This page registers a user in the database. 
+
+Arguments:
+
+{
+  ["email"],       //String that contains the user's email. This should not be able to be edited by the user. Maybe we should not use this argument and rely instead on the information given by the token id?
+  ["name"],        //String that contains the user's name. This should not be able to be edited by the user. Maybe we should not use this argument and rely instead on the information given by the token id?
+  ["height"],      //OPTIONAL, String that contains the user's height.
+  ["weight"],      //OPTIONAL, Float that contains the user's weight.
+  ["hair"],        //OPTIONAL, String that contains the user's hair color.
+  ["eye"],         //OPTIONAL, String that contains the user's eye color.
+  ["house"],       //OPTIONAL, String that contains the user's current house.
+  ["room"],        //OPTIONAL, Integer that contains the user's room.
+  ["allergies"],   //OPTIONAL, String that contains the user's allergies.
+  ["medications"], //OPTIONAL, String that contains the user's medications.
+  ["contact"]      //OPTIONAL, String that contains the user's contact information.
+}
+
+Returns:
+
+{
+  ["userRegistered"] = true //This boolean will always be true if the registration was sucesful. TODO: Add a false statement if the registration wasn't sucesful.
+}
+
+*/
+
 app.post('/register', function (req, res) {
   try {
     data = JSON.parse(Object.keys(req.body))
@@ -119,6 +225,7 @@ app.post('/register', function (req, res) {
       names = ["height", "weight", "hair", "eye", "house", "room", "allergies", "medications", "contact"]
       for (name in names) {
         if (!data[names[name]]) {
+          //This check is to change the integers to 0, and the strings to "".
           if (names[name] == "weight") {
             data[names[name]] = 0
           } else {
@@ -126,7 +233,7 @@ app.post('/register', function (req, res) {
           }
         }
       }
-      log("Registered email " + data["email"])
+      log("Registered email " + user.data["email"])
       db.serialize(function() {
         db.run("INSERT INTO user VALUES (?,?,?,?,?,?,?,?,?,?,?)", data["email"], data["name"], data["height"], data["weight"], data["hair"], data["eye"], data["house"], data["room"], data["allergies"], data["medications"], data["contact"]) 
       })
@@ -136,6 +243,27 @@ app.post('/register', function (req, res) {
       }
   })
 })
+
+/*
+
+This page logs an emergency to the queue. If an emergency has been logged already, it won't log it again.
+
+TODO: Add a geographical check as to limit the locations to DePauw's campus.
+
+Arguments: 
+
+{
+  ["email"],    //The user's email. It is purposively being taken from the request.
+  ["name"],     //The user's name. It is purposively being taken from the request.
+  ["latitude"], //The user's latitude, as reported by the OS.
+  ["longitude"] //The user's longitude, as reported by the OS.
+}
+
+Returns:
+
+Nothing
+
+*/
 
 app.post('/emergency', function (req, res) {
   try {
@@ -149,7 +277,9 @@ app.post('/emergency', function (req, res) {
       if (data["latitude"] && data ["longitude"]) {
         db.get("SELECT * FROM queue WHERE email == ?", data["email"], function(err, row) {
           if (row == undefined) {
-            db.run("INSERT INTO queue VALUES (?,?,?,?,?)", data["email"], data["name"], data["latitude"], data["longitude"], Date.now()) 
+            db.serialize(function () {
+              db.run("INSERT INTO queue VALUES (?,?,?,?,?)", data["email"], data["name"], data["latitude"], data["longitude"], Date.now()) 
+            })
             log("Emergency reported at lat:" + data["latitude"] + " lon:" + data["longitude"] + " by " + user.data["email"])
           } else {
             log("Attempted to report emmergency by " + user.data["email"] + " but an emergency has already been logged")
@@ -159,6 +289,34 @@ app.post('/emergency', function (req, res) {
     }
   })
 })
+
+/*
+  
+This page returns all the information from a user in the database. It doesn't check if the user exists, so if it doesn't exist, it will return "undefined".
+
+Arguments:
+
+{
+  ["email"] //The email from which the information is requested
+}
+
+Returns:
+
+{
+  ["email"],       //String that contains the user's email.
+  ["name"],        //String that contains the user's name.
+  ["height"],      //OPTIONAL, String that contains the user's height.
+  ["weight"],      //OPTIONAL, Float that contains the user's weight.
+  ["hair"],        //OPTIONAL, String that contains the user's hair color.
+  ["eye"],         //OPTIONAL, String that contains the user's eye color.
+  ["house"],       //OPTIONAL, String that contains the user's current house.
+  ["room"],        //OPTIONAL, Integer that contains the user's room.
+  ["allergies"],   //OPTIONAL, String that contains the user's allergies.
+  ["medications"], //OPTIONAL, String that contains the user's medications.
+  ["contact"]      //OPTIONAL, String that contains the user's contact information.
+}
+
+*/
 
 app.post('/request', function (req, res) {
   try {
@@ -178,6 +336,32 @@ app.post('/request', function (req, res) {
     }
   })
 })
+
+/*
+
+This page updates the information of an user in the database. 
+
+Arguments:
+
+{
+  ["email"],       //String that contains the user's email.
+  ["name"],        //String that contains the user's name.
+  ["height"],      //OPTIONAL, String that contains the user's height.
+  ["weight"],      //OPTIONAL, Float that contains the user's weight.
+  ["hair"],        //OPTIONAL, String that contains the user's hair color.
+  ["eye"],         //OPTIONAL, String that contains the user's eye color.
+  ["house"],       //OPTIONAL, String that contains the user's current house.
+  ["room"],        //OPTIONAL, Integer that contains the user's room.
+  ["allergies"],   //OPTIONAL, String that contains the user's allergies.
+  ["medications"], //OPTIONAL, String that contains the user's medications.
+  ["contact"]      //OPTIONAL, String that contains the user's contact information.
+}
+
+Returns:
+
+Nothing
+
+*/
 
 app.post('/update', function (req, res) {
   try {
@@ -207,6 +391,22 @@ app.post('/update', function (req, res) {
   })
 })
 
+/*
+
+This page cancels and deletes an element in the queue, identified by the email associated to the request. It doesn't verify if the email is the same as the token, as to allow security members to cancel queue items.
+
+Arguments:
+
+{
+  ["email"] //The email of the queue item to delete.
+}
+
+Returns:
+
+Nothing
+
+*/
+
 app.post('/cancel', function (req, res) {
   try {
     data = JSON.parse(Object.keys(req.body))
@@ -221,6 +421,22 @@ app.post('/cancel', function (req, res) {
     }
   })
 })
+
+/*
+
+This page returns all the elements in the queue. TODO: check if the email that is requesting the data has security clearance.
+
+Arguments:
+
+None. (Except for the token id)
+
+Returns:
+
+{
+  ["data"] //Array with all the queue items. If there is none, then this table will be empty.
+}
+
+*/
 
 app.post('/get-queue', function (req, res) {
   try {
@@ -248,6 +464,37 @@ app.post('/get-queue', function (req, res) {
   })
 })
 
+/*
+  
+This page returns all the information from a user in the database, including the coordinates of an emergency submitted by the user. It doesn't check if the user exists, so if it doesn't exist, it will return "undefined".
+
+Arguments:
+
+{
+  ["email"] //The email from which the information is requested
+}
+
+Returns:
+
+{
+  ["email"],       //String that contains the user's email.
+  ["name"],        //String that contains the user's name.
+  ["height"],      //OPTIONAL, String that contains the user's height.
+  ["weight"],      //OPTIONAL, Float that contains the user's weight.
+  ["hair"],        //OPTIONAL, String that contains the user's hair color.
+  ["eye"],         //OPTIONAL, String that contains the user's eye color.
+  ["house"],       //OPTIONAL, String that contains the user's current house.
+  ["room"],        //OPTIONAL, Integer that contains the user's room.
+  ["allergies"],   //OPTIONAL, String that contains the user's allergies.
+  ["medications"], //OPTIONAL, String that contains the user's medications.
+  ["contact"],     //OPTIONAL, String that contains the user's contact information.
+  ["latitude"],    //String that contain's the user's latitude.
+  ["longitude"]    //String that contain's the user's longitude.
+}
+
+*/
+
+
 app.post('/request-emergency', function (req, res) {
   try {
     data = JSON.parse(Object.keys(req.body))
@@ -272,18 +519,26 @@ app.post('/request-emergency', function (req, res) {
   })
 })
 
+//If a user requests the root directory, it will send a string to the client saying that the user should not be here.
+
 app.get('/', function (req, res) {
     res.send("Hallo, you shouldn't be here");
 })
 
+/*
+
+This function clears the queue. It will remove items that are over 60 minutes old. It will also clear the authentication cache from all the tokens that already expired. It runs every 5 minutes.
+
+*/
+
 function cleanQueue() {
   var count = 0
-  /*db.each("SELECT * FROM queue", function(err, row) {
+  db.each("SELECT * FROM queue", function(err, row) {
     if (Date.now() - row.time >= 3600000) {
       db.run("DELETE FROM queue WHERE email = ?", row.email)
       count++
     }
-  })*/
+  })
   log("Cleaned " + count + " elements on the queue!")
   count = 0
   date = new Date()
@@ -298,11 +553,15 @@ function cleanQueue() {
 }
 
 /*
+This method should be user to create a server with SSL, so all the requests would have to be done using SSL. 
+
 https.createServer({
       key: fs.readFileSync('certificates/key.pem'),
       cert: fs.readFileSync('certificates/cert.pem')
     }, app).listen(3443);*/
 
+
+//Creates a server that serves http requests on port 3000.
 app.listen(3000)
 
 setInterval(cleanQueue, 300000)
