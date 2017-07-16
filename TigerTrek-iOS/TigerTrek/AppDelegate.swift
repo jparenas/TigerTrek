@@ -21,7 +21,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, URLSes
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
-        GIDSignIn.sharedInstance().clientID = "46698501281-u004ojo73aojqlufen112jgsn2c59enp.apps.googleusercontent.com"
+        
+        
+        if let path = Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist") {
+            let dictRoot = NSDictionary(contentsOfFile: path)
+            if let dict = dictRoot {
+                GIDSignIn.sharedInstance().clientID = dict["CLIENT_ID"] as! String
+            }
+        }
+        
         GIDSignIn.sharedInstance().scopes = ["https://www.googleapis.com/auth/userinfo.email", "https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/plus.me"]
         // "https://www.googleapis.com/auth/plus.login" is also one of the scopes... but it's not used.
         GIDSignIn.sharedInstance().delegate = self

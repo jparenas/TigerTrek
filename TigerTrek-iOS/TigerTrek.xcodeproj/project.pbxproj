@@ -86,7 +86,7 @@
 		0415D8231F0AF74700F0C178 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		0415D8251F0AF74C00F0C178 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		0415D8271F0AF75500F0C178 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
-		0415D8291F0AF77F00F0C178 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		0415D8291F0AF77F00F0C178 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../GoogleService-Info.plist"; sourceTree = "<group>"; };
 		04166FCB1F193DCC00F6E609 /* InformationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InformationViewController.swift; sourceTree = "<group>"; };
 		0438C2E31F0C1CEB00C0D229 /* Eureka.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Eureka.xcodeproj; path = "../../../Downloads/Eureka-swift3.2/Eureka.xcodeproj"; sourceTree = "<group>"; };
 		0438C2FD1F0C38E400C0D229 /* RegistrationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegistrationViewController.swift; sourceTree = "<group>"; };
@@ -135,7 +135,6 @@
 		0415D8001F0AF66200F0C178 = {
 			isa = PBXGroup;
 			children = (
-				0415D8291F0AF77F00F0C178 /* GoogleService-Info.plist */,
 				0490D2581F0B0659007D695A /* TigerTalk-Bridging-Header.h */,
 				0415D80B1F0AF66300F0C178 /* TigerTrek */,
 				0415D80A1F0AF66300F0C178 /* Products */,
@@ -155,6 +154,7 @@
 		0415D80B1F0AF66300F0C178 /* TigerTrek */ = {
 			isa = PBXGroup;
 			children = (
+				0415D8291F0AF77F00F0C178 /* GoogleService-Info.plist */,
 				0415D80C1F0AF66300F0C178 /* AppDelegate.swift */,
 				0415D80E1F0AF66300F0C178 /* ViewController.swift */,
 				0493290E1F0B2BDD00A58FE2 /* UnlockViewController.swift */,

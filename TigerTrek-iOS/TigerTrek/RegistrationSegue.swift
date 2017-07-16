@@ -22,9 +22,7 @@ class RegistrationSegue: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        print("Segue time!")
-        
+                
         self.performSegue(withIdentifier: "segueToRegistration", sender: nil)
     }
 }

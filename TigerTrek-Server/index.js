@@ -129,7 +129,7 @@ The way to know if a user is part of the security team is by using its email. It
 All the documentation for the server requests will assume that the arguments are the keys and the values in JSON format that needs to be sent from the client to the server, and the response will be a JSON table sent from the server to the client. 
 
 ---------IMPORTANT---------
-All the requests need to include the token id, as a security measure. It always needs to be added to the JSON request with the following key: ["token"]
+All the requests need to include the token id, as a security measure. It always needs to be added to the JSON request with the following key: ["id"]
 
 */
 
@@ -140,7 +140,7 @@ This page checks if the user has already registered, and whether it is security 
 Arguments:
 
 {
-  ["token"] //The user's token id as reported by Google.
+  ["id"] //The user's token id as reported by Google.
 }
 
 Returns:
@@ -170,7 +170,7 @@ app.post('/login', function (req, res) {
             res.json({"userRegistered": false});
           } else if (row.email == user.data["email"] || securityRow.email == user.data["email"]){
             if (securityRow == undefined) {
-              security = false
+              security = true
             } else {
               security = true
             }
@@ -507,10 +507,9 @@ app.post('/request-emergency', function (req, res) {
       db.serialize(function() {
         db.get("SELECT * FROM user WHERE email == ?", data["email"], function(err, row) {
           db.get("SELECT * FROM queue WHERE email == ?", data["email"], function(queueErr, queueRow) {
-            log("Requested data from " + data["email"] + " by " + user.data["email"])
+            log("Requested emergency data from " + data["email"] + " by " + user.data["email"])
             row.latitude = queueRow.latitude
             row.longitude = queueRow.longitude
-            console.log(row)
             res.json(row)
           })
         })
