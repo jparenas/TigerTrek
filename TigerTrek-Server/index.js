@@ -1,9 +1,15 @@
 var fs = require('fs')
-const express = require('express')
-const app = express()
 const bodyParser = require('body-parser')
-const https = require('https')
+var https = require('https')
 const sqlite3 = require('sqlite3').verbose(); 
+var express = require('express')
+var helmet = require('helmet')
+
+var app = express()
+
+app.use(helmet())
+
+const port = 3443
 
 //The database file to use.
 
@@ -102,7 +108,15 @@ message: String that contains the message to log.
 
 function log(message) {
   var now = new Date()
-  console.log("[" + now.getDate() + "/" + now.getMonth()+1 + " " + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds() + "] " + message)
+  console.log("[" + now.getDate() + "/" + (now.getMonth()+1) + " " + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds() + "] " + message)
+}
+
+function logWithExecutionTime(message, hrtime) {
+  log("[Execution Time: " + (process.hrtime(hrtime)[1]/1000000) + "ms] " + message)
+}
+
+function logWithIP(message, ip, hrtime) {
+  logWithExecutionTime("[IP: " + ip + "] " + message, hrtime)
 }
 
 //BEGINNING OF SERVER PAGES
@@ -155,6 +169,7 @@ The app should redirect the user to the register form if it isn't registered. If
 */
 
 app.post('/login', function (req, res) {
+  var hrstart = process.hrtime();
   try {
     data = JSON.parse(Object.keys(req.body))
   } catch(err) {
@@ -174,7 +189,7 @@ app.post('/login', function (req, res) {
             } else {
               security = true
             }
-            log("Logged in as " + user.data["email"] + " isSecurity: " + security)
+            logWithIP("Logged in as " + user.data["email"] + " , with security clearance: " + security, req.ip, hrstart)
             res.json({"userRegistered": true, "securityAccess": security});
           }
         })
@@ -214,6 +229,7 @@ Returns:
 */
 
 app.post('/register', function (req, res) {
+  var hrstart = process.hrtime();
   try {
     data = JSON.parse(Object.keys(req.body))
   } catch(err) {
@@ -233,10 +249,10 @@ app.post('/register', function (req, res) {
           }
         }
       }
-      log("Registered email " + user.data["email"])
       db.serialize(function() {
         db.run("INSERT INTO user VALUES (?,?,?,?,?,?,?,?,?,?,?)", data["email"], data["name"], data["height"], data["weight"], data["hair"], data["eye"], data["house"], data["room"], data["allergies"], data["medications"], data["contact"]) 
       })
+      logWithIP("Registered email " + user.data["email"], req.ip, hrstart)
       res.json({"userRegistered": true});
       } else {
         res.sendStatus(401);
@@ -266,6 +282,7 @@ Nothing
 */
 
 app.post('/emergency', function (req, res) {
+  var hrstart = process.hrtime();
   try {
     data = JSON.parse(Object.keys(req.body))
   } catch(err) {
@@ -280,9 +297,9 @@ app.post('/emergency', function (req, res) {
             db.serialize(function () {
               db.run("INSERT INTO queue VALUES (?,?,?,?,?)", data["email"], data["name"], data["latitude"], data["longitude"], Date.now()) 
             })
-            log("Emergency reported at lat:" + data["latitude"] + " lon:" + data["longitude"] + " by " + user.data["email"])
+            logWithIP("Emergency reported at lat:" + data["latitude"] + " lon:" + data["longitude"] + " by " + user.data["email"], req.ip, hrstart)
           } else {
-            log("Attempted to report emmergency by " + user.data["email"] + " but an emergency has already been logged")
+            logWithIP("Attempted to report emmergency by " + user.data["email"] + " but an emergency has already been logged", req.ip, hrstart)
           }
         })
       }
@@ -319,6 +336,7 @@ Returns:
 */
 
 app.post('/request', function (req, res) {
+  var hrstart = process.hrtime();
   try {
     data = JSON.parse(Object.keys(req.body))
   } catch(err) {
@@ -329,7 +347,7 @@ app.post('/request', function (req, res) {
     if (user.authenticated) {
       db.serialize(function() {
         db.get("SELECT * FROM user WHERE email == ?", data["email"], function(err, row) {
-          log("Requested data from " + data["email"] + " by " + user.data["email"])
+          logWithIP("Requested data from " + data["email"] + " by " + user.data["email"], req.ip, hrstart)
           res.json(row)
         })
       })
@@ -364,6 +382,7 @@ Nothing
 */
 
 app.post('/update', function (req, res) {
+  var hrstart = process.hrtime();
   try {
     data = JSON.parse(Object.keys(req.body))
   } catch(err) {
@@ -385,8 +404,8 @@ app.post('/update', function (req, res) {
           }
         }
         db.run("INSERT INTO user VALUES (?,?,?,?,?,?,?,?,?,?,?)", data["email"], data["name"], data["height"], data["weight"], data["hair"], data["eye"], data["house"], data["room"], data["allergies"], data["medications"], data["contact"])
-        log("Updated information of " + data["email"])
       })
+      logWithIP("Updated information of " + data["email"], req.ip, hrstart)
     }
   })
 })
@@ -408,6 +427,7 @@ Nothing
 */
 
 app.post('/cancel', function (req, res) {
+  var hrstart = process.hrtime();
   try {
     data = JSON.parse(Object.keys(req.body))
   } catch(err) {
@@ -417,7 +437,7 @@ app.post('/cancel', function (req, res) {
   authenticate(data["id"], function (user) {
     if (user.authenticated) {
       db.run("DELETE FROM queue WHERE email = ?", data["email"])
-      log("Canceled emergency from " + data["email"])
+      logWithIP("Canceled emergency from " + data["email"], req.ip, hrstart)
     }
   })
 })
@@ -439,6 +459,7 @@ Returns:
 */
 
 app.post('/get-queue', function (req, res) {
+  var hrstart = process.hrtime();
   try {
     data = JSON.parse(Object.keys(req.body))
   } catch(err) {
@@ -457,7 +478,7 @@ app.post('/get-queue', function (req, res) {
           })
         }, function(err, rows) {
           res.json(jsonTable)
-          log("Updated queue of " + user.data["email"] + " with a total of " + rows + " rows")
+          logWithIP("Updated queue of " + user.data["email"] + " with a total of " + rows + " rows", req.ip, hrstart)
         })
       })
     }
@@ -496,6 +517,7 @@ Returns:
 
 
 app.post('/request-emergency', function (req, res) {
+  var hrstart = process.hrtime();
   try {
     data = JSON.parse(Object.keys(req.body))
   } catch(err) {
@@ -507,13 +529,13 @@ app.post('/request-emergency', function (req, res) {
       db.serialize(function() {
         db.get("SELECT * FROM user WHERE email == ?", data["email"], function(err, row) {
           db.get("SELECT * FROM queue WHERE email == ?", data["email"], function(queueErr, queueRow) {
-            log("Requested emergency data from " + data["email"] + " by " + user.data["email"])
             row.latitude = queueRow.latitude
             row.longitude = queueRow.longitude
             res.json(row)
           })
         })
       })
+      logWithIP("Requested emergency data from " + data["email"] + " by " + user.data["email"], req.ip, hrstart)
     }
   })
 })
@@ -551,16 +573,17 @@ function cleanQueue() {
   log("Cleaned cache, removing " + count + " entries")
 }
 
-/*
-This method should be user to create a server with SSL, so all the requests would have to be done using SSL. 
+//This method should be user to create a server with SSL, so all the requests would have to be done using SSL. 
 
 https.createServer({
       key: fs.readFileSync('certificates/key.pem'),
       cert: fs.readFileSync('certificates/cert.pem')
-    }, app).listen(3443);*/
+    }, app).listen(port);
+
+log("Sucessfully started the server, with the port " + port)
 
 
 //Creates a server that serves http requests on port 3000.
-app.listen(3000)
+//app.listen(3000)
 
 setInterval(cleanQueue, 300000)

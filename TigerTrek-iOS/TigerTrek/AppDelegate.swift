@@ -16,12 +16,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, URLSes
     
     var isSecurity = false
     
-    let server = "http://localhost:3000"
+    let server = "https://jparenas.xyz:3443"
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
-        
+        //UIButton.appearance().tintColor = UIColor(red: 255.0/255.0, green: 216.0/255.0, blue: 0.0/255.0, alpha: 1.0)
         
         if let path = Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist") {
             let dictRoot = NSDictionary(contentsOfFile: path)
