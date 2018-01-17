@@ -588,16 +588,16 @@ function cleanQueue() {
 }
 
 //This method should be user to create a server with SSL, so all the requests would have to be done using SSL. 
-
+/*
 https.createServer({
       key: fs.readFileSync('certificates/key.pem'),
       cert: fs.readFileSync('certificates/cert.pem')
-    }, app).listen(port);
+    }, app).listen(port);*/
 
 logger.info("Sucessfully started the server, with the port " + port)
 
 
 //Creates a server that serves http requests on port 3000.
-//app.listen(3000)
+app.listen(3000)
 
 setInterval(cleanQueue, 300000)
