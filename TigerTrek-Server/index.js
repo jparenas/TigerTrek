@@ -1,13 +1,17 @@
 var fs = require('fs')
-const bodyParser = require('body-parser')
+var bodyParser = require('body-parser')
 var https = require('https')
-const sqlite3 = require('sqlite3').verbose(); 
+var sqlite3 = require('sqlite3').verbose(); 
 var express = require('express')
 var helmet = require('helmet')
+var winston = require('winston')
+var morgan = require('morgan')
 
 var app = express()
 
 app.use(helmet())
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const port = 3443
 
@@ -19,9 +23,46 @@ var authenticationCache = []
 
 var db = new sqlite3.Database(sqliteFile); 
 
-app.use(bodyParser.json());
-//support parsing of application/x-www-form-urlencoded post data
-app.use(bodyParser.urlencoded({ extended: true }));
+if (!fs.existsSync("log")){
+    fs.mkdirSync("log");
+}
+
+var logger = new winston.Logger({
+    transports: [
+        new winston.transports.File({
+            level: 'info',
+            filename: 'log/log.log',
+            handleExceptions: true,
+            json: true,
+            maxsize: 5242880,
+            maxFiles: 5,
+            colorize: false,
+            timestamp:function() {
+              var date = new Date()
+              return date.toLocaleString();
+            }
+        }),
+        new winston.transports.Console({
+            level: 'debug',
+            handleExceptions: true,
+            json: false,
+            colorize: true,
+            timestamp:function() {
+              var date = new Date()
+              return date.toLocaleString();
+            }
+        })
+    ],
+    exitOnError: false
+})
+
+logger.stream = {
+    write: function(message, encoding){
+        logger.info(message.trim());
+    }
+};
+
+app.use(require("morgan")("tiny", { "stream": logger.stream }));
 
 /*
 
@@ -43,7 +84,7 @@ Returns:
 function authenticate(token, callback) {
   for (cache in authenticationCache) {
     if (token == authenticationCache[cache]["id"]) {
-      log("Using cached data for " + authenticationCache[cache]["email"])
+      logger.info("Using cached data for " + authenticationCache[cache]["email"])
       callback({
         authenticated: true,
         data: authenticationCache[cache]
@@ -57,7 +98,7 @@ function authenticate(token, callback) {
 
       let error;
       if (statusCode == 400) {
-        log("Unauthorized")
+        logger.info("Unauthorized user, with token: " + token)
         callback({
             authenticated: false,
             data: undefined
@@ -94,29 +135,6 @@ function authenticate(token, callback) {
     }).on('error', (e) => {
       console.error(`Got error: ${e.message}`);
     });
-}
-
-/*
-
-This function logs a message to the console, adding a timestamp to the message.
-
-Arguments:
-
-message: String that contains the message to log.
-
-*/
-
-function log(message) {
-  var now = new Date()
-  console.log("[" + now.getDate() + "/" + (now.getMonth()+1) + " " + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds() + "] " + message)
-}
-
-function logWithExecutionTime(message, hrtime) {
-  log("[Execution Time: " + (process.hrtime(hrtime)[1]/1000000) + "ms] " + message)
-}
-
-function logWithIP(message, ip, hrtime) {
-  logWithExecutionTime("[IP: " + ip + "] " + message, hrtime)
 }
 
 //BEGINNING OF SERVER PAGES
@@ -189,7 +207,7 @@ app.post('/login', function (req, res) {
             } else {
               security = true
             }
-            logWithIP("Logged in as " + user.data["email"] + " , with security clearance: " + security, req.ip, hrstart)
+            logger.info("Logged in as " + user.data["email"] + " , with security clearance: " + security)
             res.json({"userRegistered": true, "securityAccess": security});
           }
         })
@@ -234,7 +252,6 @@ app.post('/register', function (req, res) {
     data = JSON.parse(Object.keys(req.body))
   } catch(err) {
     data = req.body
-    log(err)
   }
   authenticate(data["id"], function (user) {
     if (user.authenticated) {
@@ -252,7 +269,7 @@ app.post('/register', function (req, res) {
       db.serialize(function() {
         db.run("INSERT INTO user VALUES (?,?,?,?,?,?,?,?,?,?,?)", data["email"], data["name"], data["height"], data["weight"], data["hair"], data["eye"], data["house"], data["room"], data["allergies"], data["medications"], data["contact"]) 
       })
-      logWithIP("Registered email " + user.data["email"], req.ip, hrstart)
+      logger.info("Registered email " + user.data["email"])
       res.json({"userRegistered": true});
       } else {
         res.sendStatus(401);
@@ -287,7 +304,6 @@ app.post('/emergency', function (req, res) {
     data = JSON.parse(Object.keys(req.body))
   } catch(err) {
     data = req.body
-    log(err)
   }
   authenticate(data["id"], function (user) {
     if (user.authenticated) {
@@ -297,9 +313,9 @@ app.post('/emergency', function (req, res) {
             db.serialize(function () {
               db.run("INSERT INTO queue VALUES (?,?,?,?,?)", data["email"], data["name"], data["latitude"], data["longitude"], Date.now()) 
             })
-            logWithIP("Emergency reported at lat:" + data["latitude"] + " lon:" + data["longitude"] + " by " + user.data["email"], req.ip, hrstart)
+            logger.info("Emergency reported at lat:" + data["latitude"] + " lon:" + data["longitude"] + " by " + user.data["email"], req.ip, hrstart)
           } else {
-            logWithIP("Attempted to report emmergency by " + user.data["email"] + " but an emergency has already been logged", req.ip, hrstart)
+            logger.info("Attempted to report emmergency by " + user.data["email"] + " but an emergency has already been logged", req.ip, hrstart)
           }
         })
       }
@@ -341,13 +357,12 @@ app.post('/request', function (req, res) {
     data = JSON.parse(Object.keys(req.body))
   } catch(err) {
     data = req.body
-    log(err)
   }
   authenticate(data["id"], function (user) {
     if (user.authenticated) {
       db.serialize(function() {
         db.get("SELECT * FROM user WHERE email == ?", data["email"], function(err, row) {
-          logWithIP("Requested data from " + data["email"] + " by " + user.data["email"], req.ip, hrstart)
+          logger.info("Requested data from " + data["email"] + " by " + user.data["email"])
           res.json(row)
         })
       })
@@ -387,7 +402,6 @@ app.post('/update', function (req, res) {
     data = JSON.parse(Object.keys(req.body))
   } catch(err) {
     data = req.body
-    log(err)
   }
   authenticate(data["id"], function (user) {
     if (user.authenticated && user.data["email"] == data["email"]) {
@@ -405,7 +419,7 @@ app.post('/update', function (req, res) {
         }
         db.run("INSERT INTO user VALUES (?,?,?,?,?,?,?,?,?,?,?)", data["email"], data["name"], data["height"], data["weight"], data["hair"], data["eye"], data["house"], data["room"], data["allergies"], data["medications"], data["contact"])
       })
-      logWithIP("Updated information of " + data["email"], req.ip, hrstart)
+      logger.info("Updated information of " + data["email"])
     }
   })
 })
@@ -437,7 +451,7 @@ app.post('/cancel', function (req, res) {
   authenticate(data["id"], function (user) {
     if (user.authenticated) {
       db.run("DELETE FROM queue WHERE email = ?", data["email"])
-      logWithIP("Canceled emergency from " + data["email"], req.ip, hrstart)
+      logger.info("Canceled emergency from " + data["email"])
     }
   })
 })
@@ -478,7 +492,7 @@ app.post('/get-queue', function (req, res) {
           })
         }, function(err, rows) {
           res.json(jsonTable)
-          logWithIP("Updated queue of " + user.data["email"] + " with a total of " + rows + " rows", req.ip, hrstart)
+          logger.info("Updated queue of " + user.data["email"] + " with a total of " + rows + " items")
         })
       })
     }
@@ -535,7 +549,7 @@ app.post('/request-emergency', function (req, res) {
           })
         })
       })
-      logWithIP("Requested emergency data from " + data["email"] + " by " + user.data["email"], req.ip, hrstart)
+      logger.info("Requested emergency data from " + data["email"] + " by " + user.data["email"])
     }
   })
 })
@@ -560,7 +574,7 @@ function cleanQueue() {
       count++
     }
   })
-  log("Cleaned " + count + " elements on the queue!")
+  logger.info("Cleaned " + count + " elements on the queue!")
   count = 0
   date = new Date()
   for (cache in authenticationCache) {
@@ -570,7 +584,7 @@ function cleanQueue() {
       count++
     }
   }
-  log("Cleaned cache, removing " + count + " entries")
+  logger.info("Cleaned cache, removing " + count + " entries")
 }
 
 //This method should be user to create a server with SSL, so all the requests would have to be done using SSL. 
@@ -580,7 +594,7 @@ https.createServer({
       cert: fs.readFileSync('certificates/cert.pem')
     }, app).listen(port);
 
-log("Sucessfully started the server, with the port " + port)
+logger.info("Sucessfully started the server, with the port " + port)
 
 
 //Creates a server that serves http requests on port 3000.
